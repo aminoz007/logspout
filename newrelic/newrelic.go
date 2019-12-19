@@ -242,7 +242,6 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		)
 		return
 	}
-	fmt.Println("data ya 7ajj ", data)
 
 	req, err := http.NewRequest("POST", adapter.Endpoint, &data)
 	if err != nil {
