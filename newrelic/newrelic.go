@@ -217,6 +217,8 @@ func (adapter *Adapter) readQueue() {
 				timeout.Reset(adapter.FlushInterval)
 				buffer = make([]Line, 0)
 				byteSize = 0
+			} else {
+				timeout.Reset(adapter.FlushInterval)
 			}
 		}
 	}
