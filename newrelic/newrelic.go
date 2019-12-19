@@ -113,7 +113,8 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 		key = apiKey
 		authHeader = "X-Insert-Key"
 	}
-
+	// A failure in the API may cause a log stream to hang. Logspout can detect and restart inactive Docker log streams
+	// This environment variable enables this feature
 	if os.Getenv("INACTIVITY_TIMEOUT") == "" {
 		os.Setenv("INACTIVITY_TIMEOUT", "1m")
 	}
@@ -241,6 +242,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		)
 		return
 	}
+	fmt.Println("data ya 7ajj ", data)
 
 	req, err := http.NewRequest("POST", adapter.Endpoint, &data)
 	if err != nil {
