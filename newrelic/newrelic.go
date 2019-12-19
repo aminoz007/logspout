@@ -158,6 +158,7 @@ func (adapter *Adapter) Stream(logstream chan *router.Message) {
 		fmt.Println("line 158: ", m.Container.Config.Image)
 		fmt.Println("line 158: ", adapter.Verbose)
 		if adapter.Verbose || m.Container.Config.Image != "newrelic/logspout" {
+			fmt.Println("GET INSIDE")
 			messageStr, err := json.Marshal(Message{
 				Timestamp: time.Now().Unix(),
 				Message:   adapter.sanitizeMessage(m.Data),
@@ -205,11 +206,12 @@ func (adapter *Adapter) readQueue() {
 				buffer = make([]Line, 0)
 				byteSize = 0
 			}
-
+			fmt.Println("Adding Msg: ", msg)
 			buffer = append(buffer, msg)
 			byteSize += len(msg.Log)
 
 		case <-timeout.C:
+			fmt.Println("timeout close: ", len(buffer))
 			if len(buffer) > 0 {
 				adapter.flushBuffer(buffer)
 				timeout.Reset(adapter.FlushInterval)
