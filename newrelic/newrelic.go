@@ -68,8 +68,29 @@ type Message struct {
 	Timestamp int64         `json:"timestamp"`
 	Message   string        `json:"message"`
 	Container ContainerInfo `json:"container"`
-	Level     string        `json:"level"`
+	Severity  string        `json:"severity"`
 	Hostname  string        `json:"hostname"`
+}
+
+// Body struct
+type Body struct {
+	Logs   []Message `json:"logs"`
+	Common Common    `json:"common"`
+}
+
+// Common struct
+type Common struct {
+	Attributes Attributes `json:"attributes"`
+}
+
+// Attributes struct
+type Attributes struct {
+	Plugin Plugin `json:"plugin"`
+}
+
+// Plugin struct
+type Plugin struct {
+	Type string `json:"type"`
 }
 
 func init() {
@@ -133,7 +154,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 	client := &http.Client{Transport: transport, Timeout: time.Second * 60}
 
 	adapter := &Adapter{
-		Endpoint:        getStringOpt("NEW_RELIC_URL", "https://log-api.newrelic.com/log/v1"),
+		Endpoint: getStringOpt("NEW_RELIC_URL", "	"),
 		Hostname:        getStringOpt("HOSTNAME", ""),
 		Key:             key,
 		AuthHeader:      authHeader,
@@ -168,7 +189,7 @@ func (adapter *Adapter) Stream(logstream chan *router.Message) {
 					PID:   m.Container.State.Pid,
 					Image: m.Container.Config.Image,
 				},
-				Level:    adapter.getLevel(m.Source),
+				Severity: adapter.getSeverity(m.Source),
 				Hostname: adapter.getHost(m.Container.Config.Hostname),
 			})
 
@@ -227,6 +248,7 @@ func (adapter *Adapter) readQueue() {
 func (adapter *Adapter) flushBuffer(buffer []Line) {
 	var data bytes.Buffer
 	var msg Message
+	var body []Body
 	logs := make([]Message, 0)
 
 	for _, line := range buffer {
@@ -242,11 +264,9 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		logs = append(logs, msg)
 	}
 	fmt.Println("line 242: ", logs)
-	body := struct {
-		Logs []Message `json:"logs"`
-	}{
-		Logs: logs,
-	}
+
+	bodyStruct := Body{Logs: logs, Common: Common{Attributes{Plugin{Type: "logspout"}}}}
+	body = append(body, bodyStruct)
 
 	if error := json.NewEncoder(&data).Encode(body); error != nil {
 		adapter.Log.Println(
@@ -315,7 +335,7 @@ func (adapter *Adapter) sanitizeMessage(message string) string {
 	return message
 }
 
-func (adapter *Adapter) getLevel(source string) string {
+func (adapter *Adapter) getSeverity(source string) string {
 	switch source {
 	case "stdout":
 		return "INFO"
