@@ -230,13 +230,15 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 	logs := make([]Message, 0)
 
 	for _, line := range buffer {
-		error := json.Unmarshal(line.Log, &msg)
-		adapter.Log.Println(
-			fmt.Errorf(
-				"JSON UnMarshalling Error: %s",
-				error.Error(),
-			),
-		)
+		err := json.Unmarshal(line.Log, &msg)
+		if err != nil {
+			adapter.Log.Println(
+				fmt.Errorf(
+					"JSON UnMarshalling Error: %s",
+					err.Error(),
+				),
+			)
+		}
 		logs = append(logs, msg)
 	}
 	fmt.Println("line 242: ", logs)
