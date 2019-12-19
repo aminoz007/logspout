@@ -154,7 +154,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 	client := &http.Client{Transport: transport, Timeout: time.Second * 60}
 
 	adapter := &Adapter{
-		Endpoint: getStringOpt("NEW_RELIC_URL", "	"),
+		Endpoint:        getStringOpt("NEW_RELIC_URL", "https://log-api.newrelic.com/log/v1"),
 		Hostname:        getStringOpt("HOSTNAME", ""),
 		Key:             key,
 		AuthHeader:      authHeader,
