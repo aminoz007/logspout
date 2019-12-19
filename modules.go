@@ -8,5 +8,5 @@ import (
 	_ "github.com/gliderlabs/logspout/transports/tcp"
 	_ "github.com/gliderlabs/logspout/transports/udp"
 
-	_ "newrelic-logspout/newrelic"
+	_ "github.com/aminoz007/logspout/newrelic"
 )
