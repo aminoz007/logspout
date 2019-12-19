@@ -155,6 +155,8 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 // Stream logs
 func (adapter *Adapter) Stream(logstream chan *router.Message) {
 	for m := range logstream {
+		fmt.Println("line 158: ", m.Container.Config.Image)
+		fmt.Println("line 158: ", adapter.Verbose)
 		if adapter.Verbose || m.Container.Config.Image != "newrelic/logspout" {
 			messageStr, err := json.Marshal(Message{
 				Timestamp: time.Now().Unix(),
@@ -226,7 +228,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 	for _, line := range buffer {
 		logs = append(logs, line.Log)
 	}
-
+	fmt.Println("line 231: ", logs)
 	body := struct {
 		Logs []string `json:"logs"`
 	}{
