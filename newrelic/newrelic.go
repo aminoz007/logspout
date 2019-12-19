@@ -51,7 +51,7 @@ type Adapter struct {
 
 // Line contains the message and number of post retries
 type Line struct {
-	Log     string `json:"log"`
+	Log     []byte `json:"_"`
 	Retried uint64 `json:"-"`
 }
 
@@ -181,7 +181,7 @@ func (adapter *Adapter) Stream(logstream chan *router.Message) {
 				)
 			} else {
 				adapter.Queue <- Line{
-					Log:     string(messageStr),
+					Log:     messageStr,
 					Retried: 0,
 				}
 			}
@@ -206,9 +206,8 @@ func (adapter *Adapter) readQueue() {
 				buffer = make([]Line, 0)
 				byteSize = 0
 			}
-			fmt.Println("Adding Msg: ", msg)
 			buffer = append(buffer, msg)
-			byteSize += len(msg.Log)
+			byteSize += len(string(msg.Log))
 
 		case <-timeout.C:
 			fmt.Println("timeout close: ", len(buffer))
@@ -227,14 +226,22 @@ func (adapter *Adapter) readQueue() {
 // send logs and flushBuffer
 func (adapter *Adapter) flushBuffer(buffer []Line) {
 	var data bytes.Buffer
-	logs := make([]string, 0)
+	var msg Message
+	logs := make([]Message, 0)
 
 	for _, line := range buffer {
-		logs = append(logs, line.Log)
+		error := json.Unmarshal(line.Log, &msg)
+		adapter.Log.Println(
+			fmt.Errorf(
+				"JSON UnMarshalling Error: %s",
+				error.Error(),
+			),
+		)
+		logs = append(logs, msg)
 	}
-	fmt.Println("line 231: ", logs)
+	fmt.Println("line 242: ", logs)
 	body := struct {
-		Logs []string `json:"logs"`
+		Logs []Message `json:"logs"`
 	}{
 		Logs: logs,
 	}
@@ -248,7 +255,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		)
 		return
 	}
-
+	fmt.Println("DATA:", &data)
 	req, err := http.NewRequest("POST", adapter.Endpoint, &data)
 	if err != nil {
 		adapter.Log.Println(
