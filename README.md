@@ -61,19 +61,18 @@ services:
 
 ###  Image configuration: Environment Variables
 
-Exactly one of the following:
 
 | Property | Description | Default Value | Required or Optional
 |---|---|---|---|
 | API_KEY | Your New Relic API Insert key | | Required if `LICENSE_KEY` is not provided
 | LICENSE_KEY | Your New Relic License key | | Required if `API_KEY` is not provided
 | NEW_RELIC_URL | New Relic ingestion endpoint | `https://log-api.newrelic.com/log/v1` | Optional
-| PROXY_URL | Use proxy endpoint to send the data to NR instead | | Optional
+| PROXY_URL | Use proxy endpoint to send the data to NR | | Optional
 | FILTER_NAME | Filter by container name with wildcards. For more information, review logspout docs [here!](https://github.com/gliderlabs/logspout#including-specific-containers) | | Optional
 | FILTER_ID | Filter by container ID with cildcards. For more information, review logspout docs [here!](https://github.com/gliderlabs/logspout#including-specific-containers) | | Optional
 | FILTER_SOURCES | Filter by comma-separated list of sources. For more information, review logspout docs [here!](https://github.com/gliderlabs/logspout#including-specific-containers) | | Optional
 | FILTER_LABELS | Filter by comma-separated list of labels. For more information, review logspout docs [here!](https://github.com/gliderlabs/logspout#including-specific-containers) | | Optional
-| HOSTNAME | Use this variable to overwrite default `Hostname`. | {{Container.Config.Hostname}} |Optional|
+| HOSTNAME | Use this variable to overwrite default `Hostname` | {{Container.Config.Hostname}} |Optional|
 | VERBOSE | Capture or not logspout container's logs | Enabled (set to `0` to disable) | Optional
 | FLUSH_INTERVAL | Harvest cycle (in **milliseconds**) | 250 | Optional
 | MAX_BUFFER_SIZE | The maximum size of logs for each POST request (in **mb**) | 1 | Optional
