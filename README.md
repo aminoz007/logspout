@@ -11,7 +11,7 @@ This project is provided AS-IS WITHOUT WARRANTY OR SUPPORT, although you can rep
 ```bash 
 docker run --name="newrelic" --restart=always \
 -d -v=/var/run/docker.sock:/var/run/  docker.sock \
--e "<KEY>=<KEY_VALUE>" newrelic/logspout:latest
+-e "<KEY>=<KEY_VALUE>" aminoz86/logspout-newrelic:latest
 ```
 Where `<KEY>` is exactly one of the following:
 
@@ -28,7 +28,7 @@ services:
   newrelic:
     environment:
         - <KEY>="<KEY_VALUE>"
-    image: newrelic/logspout:latest
+    image: aminoz86/logspout-newrelic:latest
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -45,7 +45,7 @@ networks:
   logging:
 services:
   newrelic:
-    image: newrelic/logspout:latest
+    image: aminoz86/logspout-newrelic:latest
     networks:
       - logging
     volumes:
