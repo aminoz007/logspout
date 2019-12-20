@@ -176,10 +176,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 // Stream logs
 func (adapter *Adapter) Stream(logstream chan *router.Message) {
 	for m := range logstream {
-		fmt.Println("line 158: ", m.Container.Config.Image)
-		fmt.Println("line 158: ", adapter.Verbose)
-		if adapter.Verbose || m.Container.Config.Image != "newrelic/logspout" {
-			fmt.Println("GET INSIDE")
+		if adapter.Verbose || m.Container.Config.Image != "aminoz86/logspout-newrelic" {
 			messageStr, err := json.Marshal(Message{
 				Timestamp: time.Now().Unix(),
 				Message:   adapter.sanitizeMessage(m.Data),
@@ -231,7 +228,6 @@ func (adapter *Adapter) readQueue() {
 			byteSize += len(string(msg.Log))
 
 		case <-timeout.C:
-			fmt.Println("timeout close: ", len(buffer))
 			if len(buffer) > 0 {
 				adapter.flushBuffer(buffer)
 				timeout.Reset(adapter.FlushInterval)
@@ -263,7 +259,6 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		}
 		logs = append(logs, msg)
 	}
-	fmt.Println("line 242: ", logs)
 
 	bodyStruct := Body{Logs: logs, Common: Common{Attributes{Plugin{Type: "logspout"}}}}
 	body = append(body, bodyStruct)
@@ -277,7 +272,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		)
 		return
 	}
-	fmt.Println("DATA:", &data)
+
 	req, err := http.NewRequest("POST", adapter.Endpoint, &data)
 	if err != nil {
 		adapter.Log.Println(
