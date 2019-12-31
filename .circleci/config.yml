@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  publish:
+    machine:
+      docker_layer_caching: false
+    steps:
+      - checkout
+      - run:
+          name: Build Docker Image
+          command: |
+            VERSION=$(git tag -l --sort=-v:refname | head -n 1 | cut -d'-' -f2)
+            docker build -f Dockerfile -t ${DOCKER_USER}/${IMAGE}:latest -t ${DOCKER_USER}/${IMAGE}:${VERSION} .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login --username ${DOCKER_USER} --password ${DOCKER_PASS}
+            docker push ${DOCKER_USER}/${IMAGE}
+workflows:
+  version: 2
+  update_image:
+    jobs:
+      - publish:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?/
+            branches:
+              ignore: /.*/

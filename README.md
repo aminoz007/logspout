@@ -83,13 +83,23 @@ services:
 
 ### EU image configuration
 
-If you are running this image in the eu set the `NEW_RELIC_URL` to `https://log-api.eu.newrelic.com/log/v1`.
+If you are running this image in the EU set the `NEW_RELIC_URL` to `https://log-api.eu.newrelic.com/log/v1`.
 
 ### Getting Your Keys
 
-Getting your New Relic Insights Insert key:
+* Getting your New Relic Insights Insert key:
 `https://insights.newrelic.com/accounts/<ACCOUNT_ID>/manage/api_keys`
 
-Getting your New Relic license key:
+* Getting your New Relic license key:
 `https://rpm.newrelic.com/accounts/<ACCOUNT_ID>`
+
+## Issues / Enhancement Requests
+
+Issues and enhancement requests can be submitted in the [Issues tab of this repository](https://github.com/aminoz007/logspout/issues).
+Please search for and review the existing open issues before submitting a new issue.
+
+## Contributing
+
+Contributions are welcome (and if you submit a Enhancement Request, expect to be invited to
+contribute it yourself :grin:).
 
