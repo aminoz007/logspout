@@ -140,7 +140,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 		os.Setenv("INACTIVITY_TIMEOUT", "1m")
 	}
 
-	transport := &http.Transport{} // Tiemout after 60s
+	transport := &http.Transport{}
 	proxyURLValue := getStringOpt("PROXY_URL", "")
 	if proxyURLValue != "" {
 		proxyURL, err := url.Parse(proxyURLValue)
@@ -151,7 +151,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 	// Create the client
-	client := &http.Client{Transport: transport, Timeout: time.Second * 60}
+	client := &http.Client{Transport: transport, Timeout: time.Second * 60} // Tiemout after 60s
 
 	adapter := &Adapter{
 		Endpoint:        getStringOpt("NEW_RELIC_URL", "https://log-api.newrelic.com/log/v1"),
