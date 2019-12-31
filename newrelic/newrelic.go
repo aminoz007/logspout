@@ -151,7 +151,7 @@ func NewNewRelicAdapter(route *router.Route) (router.LogAdapter, error) {
 		transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	}
 	// Create the client
-	client := &http.Client{Transport: transport, Timeout: time.Second * 60} // Tiemout after 60s
+	client := &http.Client{Transport: transport, Timeout: time.Second * 60} // Timeout after 60s
 
 	adapter := &Adapter{
 		Endpoint:        getStringOpt("NEW_RELIC_URL", "https://log-api.newrelic.com/log/v1"),
