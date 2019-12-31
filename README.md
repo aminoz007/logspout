@@ -21,8 +21,8 @@ Where `<KEY>` is exactly one of the following:
 
 | Property | Description |
 |---|---|
-| api_key | your New Relic API Insert key |
-| license_key | your New Relic License key |
+| api_key | Your New Relic API Insert Key |
+| license_key | Your New Relic License Key |
 
 ### Elastic Container Service (ECS)
 
