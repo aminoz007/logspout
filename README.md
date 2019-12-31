@@ -1,4 +1,8 @@
-# New Relic Logspout Image
+# Logspout Image For New Relic
+[![Build Status](https://circleci.com/gh/aminoz007/logspout.svg?style=svg)](https://circleci.com/gh/aminoz007/logspout)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aminoz007/logspout?style=flat-square)](https://goreportcard.com/report/github.com/aminoz007/logspout)
+[![GoDoc](https://godoc.org/github.com/aminoz007/logspout?status.svg)](https://godoc.org/github.com/aminoz007/logspout)
+[![Release](https://img.shields.io/github/release/aminoz007/logspout.svg?style=flat-square)](https://github.com/aminoz007/logspout/releases/latest)
 
 This is a [Logspout](https://github.com/gliderlabs/logspout) custom image that forwards all your containers logs to New Relic via HTTP POST using New Relic Logs API.
 
