@@ -17,7 +17,7 @@ jobs:
             docker push ${DOCKER_USER}/${IMAGE}
 workflows:
   version: 2
-  update_image:
+  update_docker_image:
     jobs:
       - publish:
           filters:
