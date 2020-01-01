@@ -99,7 +99,7 @@ If you are running this image in the EU set the `NEW_RELIC_URL` to `https://log-
 
 ## Issues / Enhancement Requests
 
-Issues and enhancement requests can be submitted in the [Issues tab of this repository](https://github.com/aminoz007/logspout/issues).
+Issues and enhancement requests can be submitted in the [issues tab of this repository](https://github.com/aminoz007/logspout/issues).
 Please search for and review the existing open issues before submitting a new issue.
 
 ## Contributing
