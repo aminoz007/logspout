@@ -14,15 +14,17 @@ This project is provided AS-IS WITHOUT WARRANTY OR SUPPORT, although you can rep
 
 ```bash 
 docker run --name="newrelic" --restart=always \
--d -v=/var/run/docker.sock:/var/run/  docker.sock \
+-d -v=/var/run/docker.sock:/var/run/docker.sock \
 -e "<KEY>=<KEY_VALUE>" aminoz86/logspout-newrelic:latest
 ```
 Where `<KEY>` is exactly one of the following:
 
 | Property | Description |
 |---|---|
-| api_key | Your New Relic API Insert Key |
-| license_key | Your New Relic License Key |
+| API_KEY | Your New Relic API Insert Key |
+| LICENSE_KEY | Your New Relic License Key |
+
+Careful: the `<KEY>` name is case sensitive (should be in uppercase as shown above)!!
 
 ### Elastic Container Service (ECS)
 
