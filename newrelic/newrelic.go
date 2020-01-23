@@ -57,10 +57,11 @@ type Line struct {
 
 // ContainerInfo contains the container attributes
 type ContainerInfo struct {
-	Name  string `json:"name"`
-	ID    string `json:"id"`
-	PID   int    `json:"pid",omitempty`
-	Image string `json:"image"`
+	Name   string            `json:"name"`
+	ID     string            `json:"id"`
+	PID    int               `json:"pid,omitempty"`
+	Image  string            `json:"image"`
+	Labels map[string]string `json:"labels"`
 }
 
 // Message is the actual Log structure
@@ -85,7 +86,8 @@ type Common struct {
 
 // Attributes struct
 type Attributes struct {
-	Plugin Plugin `json:"plugin"`
+	Plugin     Plugin            `json:"plugin"`
+	GlobalTags map[string]string `json:"global_tags,omitempty"`
 }
 
 // Plugin struct
@@ -118,7 +120,6 @@ func init() {
 	if err := router.Routes.Add(r); err != nil {
 		log.Fatal("Cannot Add New Route: ", err.Error())
 	}
-
 }
 
 // NewNewRelicAdapter is a new logspout Adapter
@@ -181,10 +182,11 @@ func (adapter *Adapter) Stream(logstream chan *router.Message) {
 				Timestamp: time.Now().Unix(),
 				Message:   adapter.sanitizeMessage(m.Data),
 				Container: ContainerInfo{
-					Name:  m.Container.Name,
-					ID:    m.Container.ID,
-					PID:   m.Container.State.Pid,
-					Image: m.Container.Config.Image,
+					Name:   m.Container.Name,
+					ID:     m.Container.ID,
+					PID:    m.Container.State.Pid,
+					Image:  m.Container.Config.Image,
+					Labels: m.Container.Config.Labels,
 				},
 				Severity: adapter.getSeverity(m.Source),
 				Hostname: adapter.getHost(m.Container.Config.Hostname),
@@ -260,7 +262,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		logs = append(logs, msg)
 	}
 
-	bodyStruct := Body{Logs: logs, Common: Common{Attributes{Plugin{Type: "logspout"}}}}
+	bodyStruct := Body{Logs: logs, Common: Common{Attributes{GlobalTags: getTags(), Plugin: Plugin{Type: "logspout"}}}}
 	body = append(body, bodyStruct)
 
 	if error := json.NewEncoder(&data).Encode(body); error != nil {
@@ -305,7 +307,7 @@ func (adapter *Adapter) flushBuffer(buffer []Line) {
 		if resp.StatusCode != http.StatusOK {
 			adapter.Log.Println(
 				fmt.Errorf(
-					"Received Status Code: %s While Sending Message",
+					"Received Status Code: %d While Sending Message",
 					resp.StatusCode,
 				),
 			)
@@ -370,4 +372,18 @@ func getStringOpt(name, dfault string) string {
 		return value
 	}
 	return dfault
+}
+
+// Getting global tags
+func getTags() map[string]string {
+	tags := os.Getenv("GLOBAL_TAGS")
+	m := make(map[string]string)
+	arrayTags := strings.Split(tags, ";")
+	for _, tag := range arrayTags {
+		pairs := strings.Split(tag, ":")
+		if len(pairs) > 1 {
+			m[pairs[0]] = pairs[1]
+		}
+	}
+	return m
 }
