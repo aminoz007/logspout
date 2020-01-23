@@ -82,7 +82,7 @@ services:
 | GLOBAL_TAGS | Tags all your logs sent to New Relic (example: `-e GLOBAL_TAGS="env:prod;team:myTeam"`) | | Optional
 | VERBOSE | Capture or not logspout container's logs | Enabled (set to `0` to disable) | Optional
 | FLUSH_INTERVAL | Harvest cycle (in **milliseconds**) | 250 | Optional
-| MAX_BUFFER_SIZE | The maximum size of logs for each POST request (in **mb**) | 1 | Optional
+| MAX_BUFFER_SIZE | The maximum size of logs for each POST request (in **MB**) | 1 | Optional
 | MAX_LINE_LENGTH | The maximum length for each log message (it gets truncated if it is bigger than this limit) | 15000 | Optional
 | MAX_REQUEST_RETRY | The maximum number of retries for sending a batch of logs when there are network failures | 5 | Optional
 | INACTIVITY_TIMEOUT | Logspout relies on the Docker API to retrieve container logs. A failure in the API may cause a log stream to hang. Logspout can detect and restart inactive Docker log streams. Use the environment variable `INACTIVITY_TIMEOUT` to enable this feature. E.g.: `INACTIVITY_TIMEOUT=1m` for a 1-minute threshold. | 1m | Optional
